@@ -1,0 +1,35 @@
+{
+    "name": "إذاعة القرآن الكريم",
+    "short_name": "إذاعة القرآن",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#E3B04B",
+    "theme_color": "#EBBB63",
+    "icons": [
+      {
+        "src": "img/koran (1).png",
+        "sizes": "512x512",
+        "type": "image/png"
+      },
+      {
+        "src": "img/koran (1).png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "screenshots": [
+    {
+      "src": "img/1.png",
+      "sizes": "960x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "img/2.png",
+      "sizes": "480x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+  }
+  

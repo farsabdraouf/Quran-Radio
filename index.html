@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link class="publisher_logo_path" rel="icon" type="image/png" href="img/koran (1).png">
+    <title>إذاعة القرآن الكريم</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+
+</head>
+<body>
+    <img src="img/info.png" alt="أيقونة التعجب" class="icon" onclick="toggleInfoBox()">
+
+    <div id="infoBox" class="info-box">
+        تم تطوير الموقع بواسطة فارس عبد الرؤوف
+    </div>
+
+    <div class="dropdown">
+        <button class="dropbtn">اختر القراءة</button>
+        <div class="dropdown-content">
+            <a href="#" onclick="filterRadios('hafs')">حفص عن عاصم</a>
+            <a href="#" onclick="filterRadios('warsh')">ورش عن نافع</a>
+            <a href="#" onclick="filterRadios('mjwad')">المصحف المجود</a>
+            <a href="#" onclick="filterRadios('misc')">متنوع</a>
+        </div>
+    </div>
+
+    <h1>إذاعة القرآن الكريم</h1>
+
+    <div id="music-container" class="music-container">
+        <div class="music-info">
+            <h4 id="title" style="text-align: center;"></h4>
+            <div id="progress-container" class="progress-container">
+                <div id="progress" class="progress"></div>
+            </div>
+        </div>
+
+        <audio id="audio"></audio>
+
+        <div class="navigation">
+            <button id="prev" class="action-btn">
+                <i class="fas fa-forward"></i>
+            </button>
+            <button id="play" class="action-btn action-btn-big">
+                <i class="fas fa-play"></i>
+            </button>
+            <button id="next" class="action-btn">
+                <i class="fas fa-backward"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
