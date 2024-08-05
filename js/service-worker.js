@@ -2,15 +2,15 @@
 const CACHE_NAME = 'quran-radio-cache-v1';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/style.css',
+  '../index.html',
+  '../css/style.css',
   '/script.js',
-  '/manifest.json',
-  '/ArefRuqaa-Bold.ttf',
-  '/info.png',
-  '/koran (1).png',
-  '/1.png',
-  '/2.png'
+  '../manifest.json',
+  '../font/ArefRuqaa-Bold.ttf',
+  '../img/info.png',
+  '../img/koran (1).png',
+  '../img/1.png',
+  '../img/2.png'
 ];
 
 self.addEventListener('install', function(event) {
