@@ -57,6 +57,7 @@ let currentType = 'hafs';
 let songs = allSongs[currentType];
 let songIndex = 0;
 let isLoading = false;
+let deferredPrompt;
 
 // تحديث دالة loadSong
 function loadSong(song) {
@@ -90,7 +91,7 @@ function updateMediaSession(song) {
     });
 
     // تعيين معالجات الأحداث
-    ['play', 'pause', 'previoustrack', 'nexttrack'].forEach(action => {
+    ['play', 'pause', 'previoustrack', 'nexttrack', 'seekforward', 'seekbackward'].forEach(action => {
       navigator.mediaSession.setActionHandler(action, () => {
         switch(action) {
           case 'play':
@@ -104,6 +105,12 @@ function updateMediaSession(song) {
             break;
           case 'nexttrack':
             nextSong();
+            break;
+          case 'seekforward':
+            audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+            break;
+          case 'seekbackward':
+            audio.currentTime = Math.max(0, audio.currentTime - 10);
             break;
         }
       });
@@ -158,18 +165,18 @@ audio.addEventListener('pause', () => {
 });
 
 function prevSong() {
-    songIndex++;
-    if (songIndex > songs.length - 1) {
-        songIndex = 0;
+    songIndex--;
+    if (songIndex < 0) {
+        songIndex = songs.length - 1;
     }
     loadSong(songs[songIndex]);
     playSong();
 }
 
 function nextSong() {
-    songIndex--;
-    if (songIndex < 0) {
-        songIndex = songs.length - 1;
+    songIndex++;
+    if (songIndex > songs.length - 1) {
+        songIndex = 0;
     }
     loadSong(songs[songIndex]);
     playSong();
@@ -194,7 +201,6 @@ function filterRadios(type) {
     songs = allSongs[type];
     songIndex = 0;
     loadSong(songs[songIndex]);
-    playSong();
     
     dropBtn.textContent = 
         type === 'hafs' ? 'حفص عن عاصم' :
@@ -255,8 +261,8 @@ playBtn.addEventListener("click", () => {
     }
 });
 
-prevBtn.addEventListener("click", prevSong);  // Swapped with nextSong
-nextBtn.addEventListener("click", nextSong);  // Swapped with prevSong
+prevBtn.addEventListener("click", prevSong);
+nextBtn.addEventListener("click", nextSong);
 
 audio.addEventListener("timeupdate", updateProgress);
 progressContainer.addEventListener("click", setProgress);
@@ -269,7 +275,12 @@ audio.addEventListener('error', (e) => {
     nextSong();
 });
 
+audio.addEventListener('waiting', () => {
+    title.innerText = 'جاري التحميل...';
+});
+
 audio.addEventListener('canplay', () => {
+    title.innerText = songs[songIndex];
     isLoading = false;
 });
 
@@ -307,3 +318,57 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // منع المتصفح من عرض الإشعار التلقائي
+  e.preventDefault();
+  // حفظ الحدث ليتم استخدامه لاحقًا
+  deferredPrompt = e;
+  
+  // عرض زر أو رسالة تشجع المستخدم على التثبيت
+  showInstallPromotion();
+});
+
+function showInstallPromotion() {
+  // يمكنك عرض زر أو رسالة هنا
+  const installButton = document.createElement('button');
+  installButton.innerText = 'تثبيت التطبيق';
+  installButton.style.position = 'fixed';
+  installButton.style.bottom = '20px';
+  installButton.style.right = '20px';
+  installButton.style.padding = '10px 20px';
+  installButton.style.backgroundColor = '#4CAF50';
+  installButton.style.color = 'white';
+  installButton.style.border = 'none';
+  installButton.style.borderRadius = '5px';
+  installButton.style.cursor = 'pointer';
+  installButton.style.zIndex = '1000';
+  
+  installButton.addEventListener('click', () => {
+    // إخفاء الزر بعد النقر
+    installButton.style.display = 'none';
+    // عرض إشعار التثبيت
+    deferredPrompt.prompt();
+    // انتظار اختيار المستخدم
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('وافق المستخدم على التثبيت');
+      } else {
+        console.log('رفض المستخدم التثبيت');
+      }
+      // مسح الحدث بعد الانتهاء
+      deferredPrompt = null;
+    });
+  });
+  
+  document.body.appendChild(installButton);
+}
+
+window.addEventListener('appinstalled', (evt) => {
+  console.log('تم تثبيت التطبيق');
+  // إخفاء زر التثبيت إذا كان موجودًا
+  const installButton = document.querySelector('button[style*="bottom: 20px"]');
+  if (installButton) {
+    installButton.style.display = 'none';
+  }
+});
